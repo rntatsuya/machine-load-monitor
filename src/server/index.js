@@ -2,7 +2,9 @@ const express = require('express');
 const http = require("http");
 const socketIo = require("socket.io");
 const monitor = require("os-monitor");
+const os = require("os");
 const Queue = require("./queue");
+const createAlert = require('./alert');
 
 const app = express();
 const server = http.createServer(app);
@@ -13,8 +15,12 @@ const alertData = []; // store
 let prevAlert = null; // save the alerts to emit to client
 
 const MAX_DELTA_TIME = monitor.minutes(10);
-const LOAD_AVG_CHECK_INTERVAL = monitor.minutes(1);
-const LOAD_THRESHOLD = 2;
+const LOAD_AVG_CHECK_INTERVAL = monitor.minutes(0.5);
+
+const NUM_CPUS = os.cpus().length;
+const PER_CPU_LOAD_THRESHOLD = 2;
+const LOAD_ALERT_THRESHOLD = Math.ceil(NUM_CPUS / PER_CPU_LOAD_THRESHOLD);
+
 
 // connect to '/public/index.html' as root page
 app.use('/', express.static('public'));
@@ -30,9 +36,8 @@ io.on("connection", socket => {
 
 //
 monitor.on('monitor', function(event) {
-  console.log(event.type, ' This event always happens on each monitor cycle!');
-  const dataPoint = {load: event.loadavg[0], timestamp: Date.now()};
-
+  const dataPoint = {load: event.loadavg[0], freeMem: bytesToGigaBytes(event.freemem), timestamp: Date.now()};
+  console.log('freeMem', dataPoint);
 
   // keep only 10 min worth of data
   dataLog.enqueue(dataPoint); // store object with {load: --, timestamp: --}
@@ -45,18 +50,10 @@ monitor.on('monitor', function(event) {
   console.log("alertData");
   console.log(alertData);
   if (checkFull(alertData, LOAD_AVG_CHECK_INTERVAL)) {
-    // get load avg.
-    const loadSum = alertData.reduce((sum, dataPoint) => sum + dataPoint.load, 0);
-    const loadAvg = loadSum / alertData.length;
-
-    // get last timestamp
-    const timestamp = alertData[alertData.length - 1].timestamp;
-    const isAlert = loadAvg > LOAD_THRESHOLD;
+    const alert = createAlert(alertData, prevAlert, LOAD_ALERT_THRESHOLD);
 
     console.log(prevAlert);
-    if (isAlert || (!isAlert && prevAlert && prevAlert.isAlert)) {
-      alert = {loadAvg, isAlert, timestamp};
-
+    if (alert) {
       console.log("emitting alert");
       console.log(alert);
       io.emit('alert', alert);
@@ -76,6 +73,10 @@ const checkFull = (log, timeInterval) => {
   const newest = log[log.length - 1].timestamp;
 
   return newest - oldest >= timeInterval;
+}
+
+const bytesToGigaBytes = (bytes) => {
+  return bytes / Math.pow(10, 9);
 }
 
 
@@ -100,9 +101,12 @@ const getLoad = async socket => {
 
 // start the os-monitor
 monitor.start({
-  delay: monitor.seconds(10), // interval between monitor cycles
+  delay: monitor.seconds(5), // interval between monitor cycles
 });
 
 // start the server
 const port = 3000;
 server.listen(port, () => console.log(`Listening on port ${port}`));
+
+
+console.log(os.cpus());

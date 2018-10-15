@@ -59,7 +59,11 @@ class LineChart extends Component {
         .attr('y', 6)
         .attr('dy', '0.71em')
         .attr('text-anchor', 'end')
-        .text('Load Average');
+        .style("font-size", "15px")
+        .text("Load Average")
+        .attr("transform", function(d) {
+          return "translate(" + -50 + "," + 0 + ") rotate(-90)";
+        });
 
     // Add grid
     d3.select(this.svg).insert('g',':first-child')
@@ -94,16 +98,41 @@ class LineChart extends Component {
     return valueline(data);
   }
 
+  _renderCircles = () => {
+    const { data } = this.props;
+    const { x, y } = this.state;
+
+    d3.select(this.svg).selectAll("circle").remove();
+
+    d3.select(this.svg).selectAll(classes.dot)
+        .data(this.props.data)
+      .enter().append("circle") // Uses the enter().append() method
+        .attr("r", 3.5)
+        .attr("class", classes.dot) // Assign a class for styling
+        .attr("cx", function(d) { return x(d.timestamp) })
+        .attr("cy", function(d) { return y(d.load) });
+  }
+
   render() {
-    const { width, height, margin } = this.props;
+    const { title, width, height, margin } = this.props;
     const d = this._renderLine();
 
+    console.log("HERE!!!!!!");
+    console.log(width);
+    console.log(height);
+    this._renderCircles();
+
     return (
-      <svg width={500} height={500}>
-        <g ref={ref => { this.svg = ref; }} transform={`translate(${margin.left},${margin.top})`}>
-          <path className={classes.line} d={d}/>
-        </g>
-      </svg>
+      <div>
+        <h2 className={classes.HeaderText}>
+          {title}
+        </h2>
+        <svg width={width} height={height}>
+          <g ref={ref => { this.svg = ref; }} transform={`translate(${margin.left},${margin.top})`}>
+            <path className={classes.line} d={d}/>
+          </g>
+        </svg>
+      </div>
     );
   }
 };
