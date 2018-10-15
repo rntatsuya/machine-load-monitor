@@ -9,6 +9,7 @@ h1 {
 
 .Header {
   background-color: #3d3d3d;
+  padding-bottom: 10px;
 }
 
 .App {
@@ -19,4 +20,26 @@ h1 {
 .HeaderText {
   font-family: 'VT323', monospace;
   color: #33FF33;
+  margin-bottom: 5px;
+}
+
+.Details {
+  font-family: 'VT323', monospace;
+  color: #33FF33;
+}
+
+.LeftLineChart {
+   display: table-cell;
+   min-width: 160px;
+   /* margin-left: 10px;
+   margin-right: 20px; */
+   flex: 1;
+}
+
+.RightLineChart {
+  display: table-cell;
+  width: 100%;
+  /* margin-left: 20px;
+  margin-right: 10px; */
+  flex: 1;
 }

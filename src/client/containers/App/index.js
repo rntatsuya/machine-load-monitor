@@ -1,21 +1,26 @@
 import React, { Component } from 'react';
 import socketIOClient from "socket.io-client";
 import ScrollArea from 'react-scrollbar';
-import { Container, Row, Col } from 'reactstrap';
 
 import LineChart from "../LineChart"
 import Alert from "../../components/Alert"
 import classes from './main.css';
 
 const DEFAULT_MAX_LOAD = 4;
+const DEFAULT_MAX_MEM = 100;
+const DEFAULT_MIN_MEM = 0;
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      data: [],
+      loadData: [],
+      memData: [],
       alerts: [],
-      yMax: DEFAULT_MAX_LOAD,
+      loadYMax: DEFAULT_MAX_LOAD,
+      memYMax: DEFAULT_MAX_MEM,
+      memYMin: DEFAULT_MIN_MEM,
+      alertThreshold: 1,
       endpoint: "http://localhost:3000"
     };
   }
@@ -23,30 +28,44 @@ class App extends Component {
   componentDidMount() {
     const { endpoint } = this.state;
     const socket = socketIOClient(endpoint);
-    socket.on('monitor', data => {
-      this.setState({ data: data });
+    socket.on('load-monitor', data => {
+      this.setState({ loadData: data });
+      console.log("Load");
       console.log(data);
-      this.adjustYMax();
+      this.adjustLoadYMax();
+    });
+    socket.on('mem-monitor', data => {
+      this.setState({ memData: data });
+      console.log("Mem");
+      console.log(data);
+      this.adjustMemYMaxMin();
     });
     socket.on('alert', alert => {
       this.setState({ alerts: [alert, ...this.state.alerts] });
       console.log("ALERT!!!!!");
       console.log(this.state.alerts);
     });
-
-
   }
 
-  adjustYMax = () => {
-    const maxLoad = this.state.data.reduce((prev, cur) => (prev.load > cur.load) ? prev : cur).load;
+  adjustLoadYMax = () => {
+    const maxLoad = this.state.loadData.reduce((prev, cur) => (prev.value > cur.value) ? prev : cur).value;
     console.log("MAXXX");
     console.log(maxLoad);
     if (maxLoad <= DEFAULT_MAX_LOAD) {
-      this.setState({yMax: DEFAULT_MAX_LOAD});
+      this.setState({loadYMax: DEFAULT_MAX_LOAD});
     }
     else {
-      this.setState({yMax: Math.trunc(maxLoad + 1)});
+      this.setState({loadYMax: Math.trunc(maxLoad + 1)});
     }
+  }
+
+  adjustMemYMaxMin = () => {
+    const maxMem = this.state.memData.reduce((prev, cur) => (prev.value > cur.value) ? prev : cur).value;
+    const minMem = this.state.memData.reduce((prev, cur) => (prev.value < cur.value) ? prev : cur).value;
+    console.log("MAXXX");
+    console.log(maxMem);
+    this.setState({memYMax: (maxMem + 10 > DEFAULT_MAX_MEM ? DEFAULT_MAX_MEM : Math.round(maxMem / 10) * 10 + 10)});
+    this.setState({memYMin: (minMem - 10 < DEFAULT_MIN_MEM ? DEFAULT_MIN_MEM : Math.round(maxMem / 10) * 10 - 10)});
   }
 
 
@@ -60,25 +79,25 @@ class App extends Component {
 
 
         <div style={{display: 'flex', flexDirection: 'row'}}>
-            <LineChart style={{flexGrow: 1}} title='10 Minute CPU Load History' data={this.state.data} yDomain={[0, this.state.yMax]}/>
-            <LineChart style={{flexGrow: 1}} title='10 Minute Free Memory History' data={this.state.data} yDomain={[0, this.state.yMax]}/>
+            <LineChart className={classes.LeftLineChart} title='CPU Load - 10 Minute History' yAxisText='Load Average' data={this.state.loadData} yDomain={[0, this.state.loadYMax]}/>
+            <LineChart className={classes.RightLineChart} title='Memory Usage - 10 Minute History' yAxisText='Used Memory (%)' data={this.state.memData} yDomain={[this.state.memYMin, this.state.memYMax]}/>
         </div>
 
+        <div>
           <h2 className={classes.HeaderText}>
             Alerts
           </h2>
+          <span className={classes.Details}>Load alert threshold set at {this.state.alertThreshold}</span>
+        </div>
           <div style={{textAlign: 'center'}}>
-          <ScrollArea
-              style={{margin: 'auto', maxWidth: 600, height: 400, maxHeight: 400}}
-              speed={0.8}
-              className="area"
-              contentClassName="content"
-              horizontal={false}
-              >
-            {this.state.alerts.map((alert) => (
-              <Alert key={alert.timestamp} {...alert} />
-            ))}
-          </ScrollArea>
+            <ScrollArea
+                style={{margin: 'auto', maxWidth: 600, height: 400, maxHeight: 400}}
+                speed={0.8}
+                >
+              {this.state.alerts.map((alert) => (
+                <Alert key={alert.timestamp} {...alert} />
+              ))}
+            </ScrollArea>
           </div>
 
       </div>

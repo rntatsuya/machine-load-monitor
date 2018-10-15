@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --mode development && node ./src/server/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ./src/server/alertTest.js"
   },
   "author": "",
   "license": "ISC",
@@ -25,7 +25,6 @@
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-scrollbar": "^0.5.4",
-    "reactstrap": "^6.5.0",
     "socket.io": "^2.1.1",
     "socket.io-client": "^2.1.1",
     "style-loader": "^0.23.1",

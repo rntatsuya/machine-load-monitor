@@ -1,9 +1,12 @@
 const createAlert = (alertData, prevAlert, LOAD_ALERT_THRESHOLD) => {
-  alert = null;
+  let alert = null;
 
   // get load avg.
-  const loadSum = alertData.reduce((sum, dataPoint) => sum + dataPoint.load, 0);
-  const loadAvg = loadSum / alertData.length;
+  const loadSum = alertData.reduce((sum, dataPoint) => sum + dataPoint.value, 0);
+  const loadAvg = (loadSum / alertData.length).toFixed(4);
+
+  console.log(loadSum);
+  console.log(loadAvg);
 
   // get last timestamp
   const timestamp = alertData[alertData.length - 1].timestamp;

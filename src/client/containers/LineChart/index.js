@@ -40,7 +40,7 @@ class LineChart extends Component {
   }
 
   componentDidMount() {
-    const { height, margin } = this.props;
+    const { height, margin, yAxisText } = this.props;
     const { xAxis, yAxis, grid } = this.state;
 
     // Add the X Axis
@@ -60,7 +60,7 @@ class LineChart extends Component {
         .attr('dy', '0.71em')
         .attr('text-anchor', 'end')
         .style("font-size", "15px")
-        .text("Load Average")
+        .text(yAxisText)
         .attr("transform", function(d) {
           return "translate(" + -50 + "," + 0 + ") rotate(-90)";
         });
@@ -93,7 +93,7 @@ class LineChart extends Component {
     // Add the valueline path.
     const valueline = d3.line()
       .x(d => x(d.timestamp))
-      .y(d => y(d.load));
+      .y(d => y(d.value));
 
     return valueline(data);
   }
@@ -104,26 +104,25 @@ class LineChart extends Component {
 
     d3.select(this.svg).selectAll("circle").remove();
 
+    console.log("DATA");
+    console.log(this.props.data);
+
     d3.select(this.svg).selectAll(classes.dot)
         .data(this.props.data)
       .enter().append("circle") // Uses the enter().append() method
         .attr("r", 3.5)
         .attr("class", classes.dot) // Assign a class for styling
         .attr("cx", function(d) { return x(d.timestamp) })
-        .attr("cy", function(d) { return y(d.load) });
+        .attr("cy", function(d) { return y(d.value) });
   }
 
   render() {
     const { title, width, height, margin } = this.props;
     const d = this._renderLine();
-
-    console.log("HERE!!!!!!");
-    console.log(width);
-    console.log(height);
     this._renderCircles();
 
     return (
-      <div>
+      <div className={classes.Chart}>
         <h2 className={classes.HeaderText}>
           {title}
         </h2>

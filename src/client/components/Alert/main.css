@@ -1,45 +1,12 @@
-.notification {
+.Alert {
   position: relative;
   padding: 0 0 0 64px;
   border-top: 1px solid #ddd;
+  font-family: 'VT323', monospace;
+  color: #33FF33;
 }
 
-.notification:last-child {
-  border-bottom: 1px solid #ddd;
-}
-
-.notification .title {
-  display: block;
-  font-size: 14px;
-  line-height: 45px;
-  font-weight: bold;
-}
-
-.notificationBody {
-  min-height: 70px;
-}
-
-.notificationBody.alert {
-  border-right: 10px solid #f99;
-}
-
-.notificationBody.recover {
-  border-right: 10px solid #b3e586;
-}
-
-.title.alert > span {
-  width: 220px;
-  display: inline-block;
-  line-height: 20px;
-  text-align: center;
-  background:  #fdd;
-}
-
-.notificationFooter {
-  height: 15px;
-}
-
-.serviceImg {
+.Img {
   position: absolute;
   left: 0;
   top: 2px;
@@ -47,7 +14,15 @@
   height: 48px;
 }
 
-.info {
-  display: block;
-  font-size: 12px;
+.AlertText {
+  font-size: 25px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.DetailsText {
+  font-size: 17px;
+  margin-top: 0px;
+  margin-bottom: 10px;
+  left: 10px;
 }

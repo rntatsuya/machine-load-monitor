@@ -10,12 +10,13 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
-const dataLog = new Queue();
+const loadDataLog = new Queue();
+const memDataLog = new Queue();
 const alertData = []; // store
 let prevAlert = null; // save the alerts to emit to client
 
 const MAX_DELTA_TIME = monitor.minutes(10);
-const LOAD_AVG_CHECK_INTERVAL = monitor.minutes(0.5);
+const LOAD_AVG_CHECK_INTERVAL = monitor.minutes(0.2);
 
 const NUM_CPUS = os.cpus().length;
 const PER_CPU_LOAD_THRESHOLD = 2;
@@ -25,37 +26,29 @@ const LOAD_ALERT_THRESHOLD = Math.ceil(NUM_CPUS / PER_CPU_LOAD_THRESHOLD);
 // connect to '/public/index.html' as root page
 app.use('/', express.static('public'));
 
-// setup socket
-io.on("connection", socket => {
-  console.log("New client connected"), setInterval(
-    () => getLoad(socket),
-    10000
-  );
-  socket.on("disconnect", () => console.log("Client disconnected"));
-});
-
 //
 monitor.on('monitor', function(event) {
-  const dataPoint = {load: event.loadavg[0], freeMem: bytesToGigaBytes(event.freemem), timestamp: Date.now()};
-  console.log('freeMem', dataPoint);
+  const loadDataPoint = {value: event.loadavg[0], timestamp: Date.now()};
+  const memDataPoint = {value: 100 - event.freemem / event.totalmem * 100, timestamp: Date.now()};
 
   // keep only 10 min worth of data
-  dataLog.enqueue(dataPoint); // store object with {load: --, timestamp: --}
-  if (checkFull(dataLog.toArray(), MAX_DELTA_TIME)) {
-    dataLog.dequeue();
+  loadDataLog.enqueue(loadDataPoint); // store object with {load: --, timestamp: --}
+  if (checkFull(loadDataLog.toArray(), MAX_DELTA_TIME)) {
+    loadDataLog.dequeue();
+  }
+
+  memDataLog.enqueue(memDataPoint);
+  if (checkFull(memDataLog.toArray(), MAX_DELTA_TIME)) {
+    memDataLog.dequeue();
   }
 
   // emit alert if 2 min avg goes above threshold
-  alertData.push(dataPoint);
-  console.log("alertData");
-  console.log(alertData);
+  alertData.push(loadDataPoint);
   if (checkFull(alertData, LOAD_AVG_CHECK_INTERVAL)) {
     const alert = createAlert(alertData, prevAlert, LOAD_ALERT_THRESHOLD);
 
-    console.log(prevAlert);
+
     if (alert) {
-      console.log("emitting alert");
-      console.log(alert);
       io.emit('alert', alert);
       prevAlert = alert;
     }
@@ -63,11 +56,11 @@ monitor.on('monitor', function(event) {
     alertData.length = 0;
   }
 
-  console.log(dataLog.toArray());
-  io.emit('monitor', dataLog.toArray());
+  io.emit('load-monitor', loadDataLog.toArray());
+  io.emit('mem-monitor', memDataLog.toArray());
 });
 
-// check if dataLog queue is full for a given interval
+// check if queue is full for a given interval
 const checkFull = (log, timeInterval) => {
   const oldest = log[0].timestamp;
   const newest = log[log.length - 1].timestamp;
@@ -75,29 +68,29 @@ const checkFull = (log, timeInterval) => {
   return newest - oldest >= timeInterval;
 }
 
-const bytesToGigaBytes = (bytes) => {
-  return bytes / Math.pow(10, 9);
+const bytesToMegaBytes = (bytes) => {
+  return bytes / Math.pow(10, 6);
 }
 
 
 const isAlertNotNull = alert => {
   // if neither fields are null, alert is not null
-  if (alert.load && alert.timestamp) {
+  if (alert.value && alert.timestamp) {
     return true;
   }
 
   return false;
 }
 
-// event handler
-const getLoad = async socket => {
-  try {
-    console.log("emitting");
-    socket.emit("GetLoad", );
-  } catch (error) {
-    console.error(`Error: ${error.code}`);
-  }
-};
+// // event handler
+// const getLoad = async socket => {
+//   try {
+//     console.log("emitting");
+//     socket.emit("GetLoad", );
+//   } catch (error) {
+//     console.error(`Error: ${error.code}`);
+//   }
+// };
 
 // start the os-monitor
 monitor.start({
@@ -107,6 +100,3 @@ monitor.start({
 // start the server
 const port = 3000;
 server.listen(port, () => console.log(`Listening on port ${port}`));
-
-
-console.log(os.cpus());
