@@ -4,7 +4,7 @@ A simple web application that monitors load average and memory usage on your mac
 
 Since this application was created with the React framework, it is highly extendable in terms of adding new components and features. 
 
-## Image Sample
+## Sample Image 
 
 
 ## Usage
