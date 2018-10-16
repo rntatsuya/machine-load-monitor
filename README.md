@@ -37,6 +37,9 @@ npm run test
 - os
 - d3
 
+## Project Organization
+This app uses the React framework, and is mainly consisted of three components. The App and LineChart components are considered containers, which is a naming convention in the React community for components that modify states. The Alert component on the other hand is a stateless component because it just receives data from the App container. 
+
 ## Assumptions
 - CPU load is accurately measured by taking the load average of the past minute. This minute tick is the base unit of load used in this project.
 - The CPU load threshold of interest is 1 for the 2 minute average. This value is hardcoded into the project as of now, but it is not difficult to make it a variable value determined by user input.
