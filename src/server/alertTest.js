@@ -2,18 +2,6 @@ const createAlert = require('./alert');
 
 const LOAD_ALERT_THRESHOLD = 1;
 
-const printAlert = (alert) => {
-  if (!alert) {
-    console.log('No Alert!');
-    return;
-  }
-
-  const headerMessage = alert.isAlert ? 'High load generated an alert' : 'Alert recovered';
-  const detailsMessage = 'Load Avg. = ' + alert.loadAvg + ' at ' + (new Date(alert.timestamp).toLocaleTimeString());
-
-  console.log(headerMessage);
-  console.log(detailsMessage);
-}
 
 console.log('Case with alert after no previous alert.');
 {
@@ -57,4 +45,19 @@ console.log('Case with recovery after alert.');
   alert = createAlert(alertData, prevAlert, LOAD_ALERT_THRESHOLD);
 
   printAlert(alert);
+}
+
+
+// helper function to print out alert based on the input alert state
+const printAlert = (alert) => {
+  if (!alert) {
+    console.log('No Alert!');
+    return;
+  }
+
+  const headerMessage = alert.isAlert ? 'High load generated an alert' : 'Alert recovered';
+  const detailsMessage = 'Load Avg. = ' + alert.loadAvg + ' at ' + (new Date(alert.timestamp).toLocaleTimeString());
+
+  console.log(headerMessage);
+  console.log(detailsMessage);
 }

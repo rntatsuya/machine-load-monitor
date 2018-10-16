@@ -1,13 +1,13 @@
 {
-  "name": "app",
+  "name": "react-load-monitor",
   "version": "1.0.0",
-  "description": "",
+  "description": "A simple web application that monitors load average and memory usage on your machine in real-time.",
   "main": "index.js",
   "scripts": {
     "build": "webpack --mode development && node ./src/server/index.js",
     "test": "node ./src/server/alertTest.js"
   },
-  "author": "",
+  "author": "Tatsuya Yokota",
   "license": "ISC",
   "dependencies": {
     "@babel/core": "^7.1.2",

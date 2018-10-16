@@ -8,8 +8,10 @@ const Alert = (props) => {
 
   return (
     <div className={classes.Alert}>
-      <div style={{display: 'flex', flexDirection: 'row'}}>
-        <img style={{flexGrow: 2}} className={classes.Img} src={isAlert ? "/img/alert.png" : "/img/recover.png"} alt="" />
+      <div className={classes.MessageContainer}>
+        <img
+          className={classes.Img}
+          src={isAlert ? "/img/alert.png" : "/img/recover.png"} alt="" />
         <span>
           <h3 className={classes.AlertText}>{isAlert ? 'High load generated an alert' : 'Alert recovered'}</h3>
           <h4 className={classes.DetailsText}>{`2 Minute Load Avg. = ${props.loadAvg}, at ${new Date(props.timestamp).toLocaleTimeString()}`}</h4>

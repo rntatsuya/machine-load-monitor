@@ -28,18 +28,23 @@ h1 {
   color: #33FF33;
 }
 
+.ChartsContainer {
+  display: flex;
+  flex-direction: row;
+}
+
 .LeftLineChart {
    display: table-cell;
    min-width: 160px;
-   /* margin-left: 10px;
-   margin-right: 20px; */
    flex: 1;
 }
 
 .RightLineChart {
   display: table-cell;
   width: 100%;
-  /* margin-left: 20px;
-  margin-right: 10px; */
   flex: 1;
+}
+
+.ScrollContainer {
+  text-align: center;
 }

@@ -9,6 +9,7 @@ class LineChart extends Component {
   constructor(props) {
     super(props);
 
+    // initialize local state
     const { width, height, margin } = props;
     const actualWidth = width - margin.left - margin.right;
     const actualHeight = height - margin.top - margin.bottom;
@@ -33,6 +34,7 @@ class LineChart extends Component {
     this.updateStateFromProps(nextProps);
   }
 
+  // helper func to update the x,y values of local state
   updateStateFromProps = (props) => {
     const x = this.state.x.domain(d3.extent(props.data, d => d.timestamp));
     const y = this.state.y.domain(props.yDomain);
@@ -43,13 +45,13 @@ class LineChart extends Component {
     const { height, margin, yAxisText } = this.props;
     const { xAxis, yAxis, grid } = this.state;
 
-    // Add the X Axis
+    // add the X Axis
     d3.select(this.svg).append('g')
       .attr('class', cx(classes.axis, classes.xAxis))
       .attr('transform', `translate(0,${height - margin.top - margin.bottom})`)
       .call(xAxis);
 
-    // Add the Y Axis
+    // add the Y Axis
     d3.select(this.svg).append('g')
       .attr('class', cx(classes.axis, classes.yAxis))
       .call(yAxis)
@@ -65,7 +67,7 @@ class LineChart extends Component {
           return "translate(" + -50 + "," + 0 + ") rotate(-90)";
         });
 
-    // Add grid
+    // add grid
     d3.select(this.svg).insert('g',':first-child')
       .attr('class', classes.grid)
       .call(grid);
@@ -86,6 +88,7 @@ class LineChart extends Component {
       .call(grid);
   }
 
+  // helper func to create line path
   _renderLine = () => {
     const { data } = this.props;
     const { x, y } = this.state;
@@ -98,20 +101,20 @@ class LineChart extends Component {
     return valueline(data);
   }
 
+  // helper func to add circles to each datapoint in chart
   _renderCircles = () => {
     const { data } = this.props;
     const { x, y } = this.state;
 
+    // remove circles in previous frame
     d3.select(this.svg).selectAll("circle").remove();
 
-    console.log("DATA");
-    console.log(this.props.data);
-
+    // add the circles
     d3.select(this.svg).selectAll(classes.dot)
         .data(this.props.data)
-      .enter().append("circle") // Uses the enter().append() method
+      .enter().append("circle")
         .attr("r", 3.5)
-        .attr("class", classes.dot) // Assign a class for styling
+        .attr("class", classes.dot)
         .attr("cx", function(d) { return x(d.timestamp) })
         .attr("cy", function(d) { return y(d.value) });
   }
@@ -138,7 +141,7 @@ class LineChart extends Component {
 
 LineChart.defaultProps = {
   width: 600,
-  height: 300,
+  height: 350,
   margin: { top: 20, right: 20, bottom: 30, left: 50 },
 };
 

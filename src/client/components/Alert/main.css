@@ -6,6 +6,11 @@
   color: #33FF33;
 }
 
+.MessageContainer {
+  display: flex; 
+  flex-direction: row;
+}
+
 .Img {
   position: absolute;
   left: 0;
