@@ -20,7 +20,7 @@ const LOAD_AVG_CHECK_INTERVAL = monitor.minutes(2);
 
 const NUM_CPUS = os.cpus().length;
 const PER_CPU_LOAD_THRESHOLD = 2;
-const LOAD_ALERT_THRESHOLD = Math.ceil(NUM_CPUS / PER_CPU_LOAD_THRESHOLD);
+const LOAD_ALERT_THRESHOLD = 1;//Math.ceil(NUM_CPUS / PER_CPU_LOAD_THRESHOLD);
 
 
 // connect to '/public/index.html' as root page

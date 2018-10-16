@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import socketIOClient from "socket.io-client";
 import ScrollArea from 'react-scrollbar';
 
-import LineChart from "../LineChart"
-import Alert from "../../components/Alert"
+import LineChart from "../LineChart";
+import Alert from "../../components/Alert";
 import classes from './main.css';
 
 const DEFAULT_MAX_LOAD = 4;
