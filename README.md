@@ -1,6 +1,6 @@
 # Machine Load Monitor
 
-A simple web application created with React that monitors load average on your machine.
+A simple web application created with React that monitors load average and memory usage on your machine.
 
 ## Usage
 Clone directory:
