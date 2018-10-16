@@ -6,15 +6,15 @@ An exendable simple React web application that monitors load average and memory 
 ![SampleImage](/public/img/sampleImage.png)
 
 ## Usage
-### Clone directory:
+### Clone directory and install node modules:
 ```
 git clone https://github.com/rntatsuya/react-load-monitor.git
 cd react-load-monitor
+npm install
 ``` 
 
 ### Running the app:
 ```
-npm install
 npm run start
 ``` 
 Then open http://localhost:3000/.
