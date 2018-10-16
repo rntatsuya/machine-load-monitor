@@ -14,6 +14,7 @@ Running the app:
 npm install
 npm run start
 ``` 
+Then open http://localhost:3000/.
 
 Testing the alert logic:
 ```
