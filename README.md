@@ -38,7 +38,7 @@ npm run test
 ## Project Organization
 This app uses the React framework for the client-side, and is consisted of three components: App, LineChart, and Alert. The App and LineChart components are considered containers, which is a naming convention in the React community for components that modify states. The Alert component on the other hand is a stateless component because it just receives data from the App container. 
 
-The App container also listens and receives data emmited from the server, which uses the express library to set up the server and socket.io to emit data to the client-side. All calculations for creating alerts and modifying the 10 minute historical data is done on the server-side. 
+The App container also listens and receives data emmited from the server, which uses the express library to set up the server and socket.io to emit data to the client-side every 10 seconds. All calculations for creating alerts and modifying the 10 minute historical data is done on the server-side. 
 
 ## Assumptions
 - CPU load is measured every 10 seconds by taking the load average of the past minute. This minute tick is the base unit of load used in this project.
