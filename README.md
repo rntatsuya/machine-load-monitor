@@ -52,4 +52,3 @@ The App container also listens and receives data emmited from the server, which 
 - Use Redux for state management rather than keeping a local copy of the state in React components. This change can be justified if we assume this project will be extended, but is rather unnecessary when the number of states to store is so few. 
 - In exchange for code complexity on the client-side, I can prevent data duplication of timestamps between the memory array and the load array which is updated every 10 seconds. 
 - Store the data in a database in order to have a historical record that can be used in other applications or purposes. 
-- 
