@@ -1,8 +1,13 @@
 # react-load-monitor
 
-A simple web application that monitors load average on your machine:
+A simple web application that monitors load average on your machine created with React.
 
 ## Usage
+Clone directory:
+```
+git clone https://github.com/rntatsuya/react-load-monitor.git
+cd react-load-monitor
+``` 
 
 Running the app:
 ```
@@ -16,15 +21,15 @@ npm run test
 ``` 
 
 ## Stack 
-node.js
-react
-express
-socket.io
-babel
-webpack
-os-monitor
-os
-d3
+- node.js
+- react
+- express
+- socket.io
+- babel
+- webpack
+- os-monitor
+- os
+- d3
 
 ## Assumptions
 
