@@ -3,7 +3,7 @@
 An exendable simple React web application that monitors load average and memory usage on your machine in real-time.
 
 ## Sample Image 
-
+![SampleImage](/public/img/sampleImage.png)
 
 ## Usage
 ### Clone directory:
