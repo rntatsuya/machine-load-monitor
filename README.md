@@ -33,9 +33,9 @@ npm run test
 - d3
 
 ## Assumptions
-- CPU load is accurately measured by taking the load average of the past minute. This minute tick is the smallest unit of load used in this project.
-- The CPU load threshold of interest is 1 for the 2 minute average. This value is hardcoded into the project as of now, it is not difficult to make it a variable value from user input.
-- The amount of data stored on the server-side is small enough for it to be feasible to send to the client-side. For this project, I only need to store 60 objects because I only need to show a 10 minute history with updates every 10 seconds.
+- CPU load is accurately measured by taking the load average of the past minute. This minute tick is the base unit of load used in this project.
+- The CPU load threshold of interest is 1 for the 2 minute average. This value is hardcoded into the project as of now, but it is not difficult to make it a variable value determined by user input.
+- The historical data stored on the server-side is small enough for it to be feasible to send the entire array to the client-side and update inerface in real-time. For this project, I only needed to store 60 objects because the app shows a 10 minute history with updates every 10 seconds. However, if the number of these objects were to increase exponentially, it may be more reasonable to cache the historical data array on the client-side and move the array update logic to the client-side instead in order to prevent sending the entire array over from the server to the clients-side every 10 seconds.  
 -  Whenever the load for the past 2 minutes exceeds 1 on average, an alert is triggered. When the load average drops again below 1 on average for the past 2 minutes, a recovery alert is triggered. 
 
 ## Parts to Improve
