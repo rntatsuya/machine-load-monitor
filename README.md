@@ -3,20 +3,20 @@
 A simple web application created with React that monitors load average and memory usage on your machine.
 
 ## Usage
-Clone directory:
+### Clone directory:
 ```
 git clone https://github.com/rntatsuya/react-load-monitor.git
 cd react-load-monitor
 ``` 
 
-Running the app:
+### Running the app:
 ```
 npm install
 npm run start
 ``` 
 Then open http://localhost:3000/.
 
-Testing the alert logic:
+### Testing the alert logic:
 ```
 npm run test
 ``` 
