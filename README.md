@@ -1,4 +1,4 @@
-# react-load-monitor
+# Machine Load Monitor
 
 A simple web application created with React that monitors load average on your machine.
 
