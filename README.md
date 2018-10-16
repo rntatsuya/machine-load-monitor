@@ -41,6 +41,7 @@ This app uses the React framework for the client-side, and is consisted of three
 The App container also listens and receives data emmited from the server, which uses the express library to set up the server and socket.io to emit data to the client-side every 10 seconds. All calculations for creating alerts and modifying the 10 minute historical data is done on the server-side. 
 
 ## Assumptions
+- The user is using a browser that supports client-side scripting and has scripting enabled (i.e. browser can run javascript files).
 - CPU load is measured every 10 seconds by taking the load average of the past minute. This minute tick is the base unit of load used in this project.
 - The CPU load threshold of interest is 1 for the 2 minute average. This value is hardcoded into the project as of now, but it is not difficult to make it a variable value determined by user input.
 - The historical data stored on the server-side is small enough for it to be feasible to send the entire array to the client-side and update interface in real-time without lagging. Improvement of this part is discussed below.
